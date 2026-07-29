@@ -1,0 +1,85 @@
+# Primary source checked against CPAG Welfare Rights on 2026-07-20.
+# Complementary GOV.UK sources checked on 2026-07-19.
+# Sources checked:
+# - https://cpag.org.uk/welfare-rights
+# - https://cpag.org.uk/welfare-rights/key-topics/universal-credit/universal-credit-basics
+# - https://www.gov.uk/universal-credit/eligibility
+# - https://www.gov.uk/universal-credit/how-to-claim
+
+benefit:
+  id: universal-credit
+  name: Universal Credit
+  source_url: https://cpag.org.uk/welfare-rights/key-topics/universal-credit/universal-credit-basics
+  complementary_sources:
+    - label: GOV.UK Universal Credit eligibility
+      url: https://www.gov.uk/universal-credit/eligibility
+      description: Official GOV.UK eligibility page used as a complementary check.
+    - label: GOV.UK Universal Credit claim details
+      url: https://www.gov.uk/universal-credit/how-to-claim
+      description: Official GOV.UK claim information used to cross-check application details.
+  last_verified: "2026-07-19"
+
+criteria:
+  - id: uc-living-costs
+    answer: uc_low_income_or_needs_living_cost_help
+    op: is_true
+    weight: mandatory
+    explanation: "Universal Credit is for people on a low income, out of work, working, self-employed, or unable to work who need help with living costs."
+    source_anchor: "#who-can-get-universal-credit"
+
+  - id: uc-lives-in-uk
+    answer: uc_lives_in_uk
+    op: is_true
+    weight: mandatory
+    explanation: "To claim Universal Credit, you must live in the UK."
+    source_anchor: "#who-can-get-universal-credit"
+
+  - id: uc-age-or-exception
+    answer: uc_age_18_or_exception_applies
+    op: is_true
+    weight: mandatory
+    explanation: "Most Universal Credit claimants must be 18 or over. Some 16 or 17 year olds can claim, so this answer should include any listed exception that applies."
+    source_anchor: "#who-can-get-universal-credit"
+
+  - id: uc-under-state-pension-age
+    answer: uc_under_state_pension_age
+    op: is_true
+    weight: mandatory
+    explanation: "You must usually be under State Pension age to claim Universal Credit."
+    source_anchor: "#who-can-get-universal-credit"
+
+  - id: uc-capital-limit
+    answer: uc_savings_and_investments
+    op: lte
+    value: 16000
+    weight: mandatory
+    explanation: "You must have 16000 pounds or less in money, savings and investments to claim Universal Credit."
+    source_anchor: "#who-can-get-universal-credit"
+
+  - id: uc-student-rules
+    answer: uc_not_full_time_student_or_exception_applies
+    op: is_true
+    weight: mandatory
+    explanation: "Full-time students cannot usually claim Universal Credit, but CPAG lists exceptions including parents, some disabled students, and young people without parental support."
+    source_anchor: "#who-can-get-universal-credit"
+
+evidence:
+  - id: uc-ev-identity
+    label: "Identity documents such as a passport, driving licence, debit or credit card, payslip or P60"
+    required_when: [uc-lives-in-uk, uc-age-or-exception]
+    why: "Universal Credit requires identity checks before a claim can be completed."
+
+  - id: uc-ev-bank-contact
+    label: "Bank, building society or credit union account details, plus email and phone access"
+    required_when: [uc-living-costs]
+    why: "The online claim asks for payment and contact details."
+
+  - id: uc-ev-housing-earnings-savings
+    label: "Housing costs, earnings such as payslips, National Insurance number, other benefits, childcare costs, savings and investments"
+    required_when: [uc-living-costs, uc-capital-limit]
+    why: "These details affect the Universal Credit calculation and may be needed to complete the claim."
+
+  - id: uc-ev-study-exception
+    label: "Course details and evidence for any student exception"
+    required_when: [uc-student-rules]
+    why: "Full-time students usually need to show why one of the Universal Credit student exceptions applies."

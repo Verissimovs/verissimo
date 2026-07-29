@@ -1,0 +1,158 @@
+benefit:
+  id: attendance-allowance
+  name: Attendance Allowance
+  source_url: https://cpag.org.uk/welfare-rights
+  complementary_sources:
+    - label: GOV.UK Attendance Allowance eligibility
+      url: https://www.gov.uk/attendance-allowance/eligibility
+      description: Official GOV.UK eligibility page used as a complementary check.
+    - label: GOV.UK Attendance Allowance claim details
+      url: https://www.gov.uk/attendance-allowance/how-to-claim
+      description: Official GOV.UK claim information used to cross-check application details.
+  last_verified: "2026-07-19"
+
+criteria:
+  - id: aa-state-pension-age
+    answer: aa_reached_state_pension_age
+    op: is_true
+    weight: mandatory
+    explanation: "You must have reached State Pension age."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-disability
+    answer: has_disability_or_illness
+    op: is_true
+    weight: mandatory
+    explanation: "You must have a physical disability, a mental disability, or a health condition."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-end-of-life-professional
+    answer: aa_end_of_life_professional_said_12_months_or_less
+    op: is_true
+    weight: mandatory
+    explanation: "A doctor or medical professional must have said you might have 12 months or less to live to use the special rules for end of life."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-care-need
+    answer: needs_care_or_supervision
+    op: is_true
+    weight: mandatory
+    explanation: "Your disability or health condition must be severe enough for you to need help caring for yourself, or supervision for your own or someone else's safety."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-duration
+    answer: care_duration_months
+    op: gte
+    value: 6
+    weight: mandatory
+    explanation: "You must usually have needed that help for at least 6 months. Different rules apply if you are nearing the end of life."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-in-great-britain-when-claiming
+    answer: aa_in_great_britain_when_claiming
+    op: is_true
+    weight: mandatory
+    explanation: "You must be in Great Britain when you claim, unless an exception applies."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-gb-residence-history
+    answer: aa_lived_in_gb_2_of_last_3_years_or_exception
+    op: is_true
+    weight: mandatory
+    explanation: "You must usually have been in Great Britain for at least 2 of the last 3 years, unless an exception applies."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-habitual-residence
+    answer: aa_habitually_resident_in_common_travel_area
+    op: is_true
+    weight: mandatory
+    explanation: "You must be habitually resident in the UK, Ireland, Isle of Man or the Channel Islands."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-immigration-control
+    answer: aa_not_subject_to_immigration_control_or_exception
+    op: is_true
+    weight: mandatory
+    explanation: "You must not be subject to immigration control, unless the sponsored immigrant exception applies."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-england-or-wales
+    answer: aa_lives_in_england_or_wales_when_applying
+    op: is_true
+    weight: mandatory
+    explanation: "If you live in Scotland, you need to apply for Pension Age Disability Payment instead of Attendance Allowance."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-no-overlapping-disability-benefit
+    answer: aa_not_getting_overlapping_disability_benefit
+    op: is_true
+    weight: mandatory
+    explanation: "You must not already get DLA, PIP, Adult Disability Payment, Scottish Adult Disability Living Allowance, or Armed Forces Independence Payment."
+    source_anchor: "#online-handbooks"
+
+  - id: aa-care-home-funding
+    answer: aa_not_local_authority_care_home_funded
+    op: is_true
+    weight: mandatory
+    explanation: "You cannot usually get Attendance Allowance if you live in a care home and your care is paid for by your local authority."
+    source_anchor: "#online-handbooks"
+
+evidence:
+  - id: aa-ev-national-insurance
+    label: "National Insurance number"
+    required_when: [aa-state-pension-age]
+    why: "GOV.UK lists this as information needed to apply."
+
+  - id: aa-ev-contact-details
+    label: "Address and contact details"
+    required_when: [aa-in-great-britain-when-claiming]
+    why: "GOV.UK lists these as information needed to apply."
+
+  - id: aa-ev-condition-details
+    label: "Details of the disability or health condition that creates extra help needs"
+    required_when: [aa-disability, aa-care-need]
+    why: "GOV.UK asks for details of the disability or health condition that you need extra help for."
+
+  - id: aa-ev-gp-details
+    label: "GP surgery or medical centre details"
+    required_when: [aa-disability]
+    why: "GOV.UK lists GP surgery or medical centre details as information needed to apply."
+
+  - id: aa-ev-care-setting-details
+    label: "Care home, hospital or hospice details if you are currently staying in one"
+    required_when: [aa-care-home-funding]
+    why: "GOV.UK asks for these details if you are currently staying in a care home, hospital or hospice."
+
+  - id: aa-ev-sr1
+    label: "SR1 form completed by a doctor or medical professional"
+    required_when: [aa-end-of-life-professional]
+    why: "GOV.UK says a doctor or medical professional should complete an SR1 form to confirm special rules for end of life."
+
+paths:
+  - id: end_of_life
+    label: "Special rules for end of life"
+    criteria:
+      - aa-state-pension-age
+      - aa-end-of-life-professional
+      - aa-in-great-britain-when-claiming
+      - aa-gb-residence-history
+      - aa-habitual-residence
+      - aa-immigration-control
+      - aa-england-or-wales
+      - aa-no-overlapping-disability-benefit
+      - aa-care-home-funding
+
+  - id: ordinary
+    label: "Ordinary Attendance Allowance rules"
+    criteria:
+      - aa-state-pension-age
+      - aa-disability
+      - aa-care-need
+      - aa-duration
+      - aa-in-great-britain-when-claiming
+      - aa-gb-residence-history
+      - aa-habitual-residence
+      - aa-immigration-control
+      - aa-england-or-wales
+      - aa-no-overlapping-disability-benefit
+      - aa-care-home-funding

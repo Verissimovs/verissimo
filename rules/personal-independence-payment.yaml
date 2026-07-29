@@ -1,0 +1,101 @@
+# Primary source checked against CPAG Welfare Rights on 2026-07-20.
+# Complementary GOV.UK sources checked on 2026-07-19.
+# Sources checked:
+# - https://cpag.org.uk/welfare-rights
+# - https://cpag.org.uk/welfare-rights/key-topics/personal-independence-payment
+# - https://cpag.org.uk/welfare-rights/key-topics/personal-independence-payment/pip-assessment-activities-and-descriptors
+# - https://www.gov.uk/pip
+# - https://www.gov.uk/pip/eligibility
+# - https://www.gov.uk/pip/how-to-claim
+
+benefit:
+  id: personal-independence-payment
+  name: Personal Independence Payment
+  source_url: https://cpag.org.uk/welfare-rights/key-topics/personal-independence-payment
+  complementary_sources:
+    - label: GOV.UK Personal Independence Payment eligibility
+      url: https://www.gov.uk/pip/eligibility
+      description: Official GOV.UK eligibility page used as a complementary check.
+    - label: GOV.UK Personal Independence Payment claim details
+      url: https://www.gov.uk/pip/how-to-claim
+      description: Official GOV.UK claim information used to cross-check application details.
+  last_verified: "2026-07-19"
+
+criteria:
+  - id: pip-age-16
+    answer: pip_age
+    op: gte
+    value: 16
+    weight: mandatory
+    explanation: "You must be 16 or over to get Personal Independence Payment."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-under-state-pension-age-or-recent-award
+    answer: pip_under_state_pension_age_or_recent_award
+    op: is_true
+    weight: mandatory
+    explanation: "You usually need to be under State Pension age to make a new PIP claim. GOV.UK remains listed as a complementary official check for current claim-routing details."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-long-term-condition
+    answer: pip_has_long_term_condition
+    op: is_true
+    weight: mandatory
+    explanation: "PIP is for people with a long-term physical or mental health condition or disability."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-daily-living-or-mobility-difficulty
+    answer: pip_has_daily_living_or_mobility_difficulty
+    op: is_true
+    weight: mandatory
+    explanation: "You must have difficulty with certain everyday tasks or getting around because of your condition."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-expected-duration
+    answer: pip_difficulties_expected_12_months
+    op: is_true
+    weight: mandatory
+    explanation: "You must expect the difficulties to last for at least 12 months from when they started."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-england-or-wales
+    answer: pip_lives_in_england_or_wales_when_applying
+    op: is_true
+    weight: mandatory
+    explanation: "For this rule file, PIP is treated as an England and Wales benefit route. Scotland uses Adult Disability Payment instead."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-residence-2-of-3-years
+    answer: pip_lived_in_gb_2_of_last_3_years
+    op: is_true
+    weight: mandatory
+    explanation: "To apply for PIP, you usually need to have lived in England, Scotland or Wales for at least 2 of the last 3 years."
+    source_anchor: "#online-handbooks"
+
+  - id: pip-no-afip
+    answer: pip_not_receiving_armed_forces_independence_payment
+    op: is_true
+    weight: mandatory
+    explanation: "You can get PIP with most other benefits, but not with Armed Forces Independence Payment."
+    source_anchor: "#online-handbooks"
+
+evidence:
+  - id: pip-ev-contact-identity
+    label: "Contact details, date of birth, National Insurance number, and bank or building society details"
+    required_when: [pip-age-16]
+    why: "These details are requested when starting a PIP claim."
+
+  - id: pip-ev-health-professional
+    label: "Doctor or health worker name, address and telephone number"
+    required_when: [pip-long-term-condition]
+    why: "DWP asks for health professional details when starting a PIP claim."
+
+  - id: pip-ev-supporting-documents
+    label: "Supporting documents such as prescription lists, care plans, or information from your doctor or others involved in your care"
+    required_when: [pip-daily-living-or-mobility-difficulty, pip-expected-duration]
+    why: "These documents support the form about how your disability or condition affects you."
+
+  - id: pip-ev-residence-history
+    label: "Dates and countries for any time spent abroad for more than 4 weeks"
+    required_when: [pip-residence-2-of-3-years]
+    why: "The PIP claim asks about time spent abroad."
