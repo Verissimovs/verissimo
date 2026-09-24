@@ -29,6 +29,9 @@ const mockAssessments = [
 ];
 
 test('guided assessment can be completed with keyboard input only', async ({ page }) => {
+  // Walks every question by Tab key presses, so it needs more time than the default 30s.
+  test.setTimeout(120_000);
+
   await page.route('**/api/assess', async (route) => {
     await route.fulfill({
       contentType: 'application/json',
